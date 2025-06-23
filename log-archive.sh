@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# Welcome to the Log Archival Tool
+# Welcome to the Log Archive Tool
 
-# Default to /var/log if no directory is supplied
+# Default to /var/log #if no directory is supplied
 LOGDIR="${1:-/var/log}"
 
 # Verify it actually exists
@@ -14,7 +14,23 @@ fi
 
 # Change into it
 cd "$LOGDIR"
-tail -n 10 messages
-echo "Archiving logs in $(pwd)..."
-# …rest of your archival logic…
+
+# Generate timestamp
+TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
+
+# Archive Directory
+ARCHIVE_DIR="/usr/archives"
+mkdir -p "$ARCHIVE_DIR"
+
+# Archive file name 
+ARCHIVE_NAME="logs_archive_${TIMESTAMP}.tar.gz"
+
+# Create the compressed Archive
+tar -czvf "$ARCHIVE_DIR/$ARCHIVE_NAME" "$LOGDIR"
+
+LOG_FILE="/usr/archives.log"
+
+echo "$(date) - Archived $LOGDIR to $ARCHIVE_DIR/$ARCHIVE_NAME" >> "$LOG_FILE"
+
+echo "Archiving logs in $ARCHIVE_DIR/$ARCHIVE_NAME..."
 
